@@ -1,5 +1,3 @@
-from dis import disassemble
-from os import getresgid
 from tkinter import ttk
 from tkinter import *
 from PIL import Image, ImageTk
