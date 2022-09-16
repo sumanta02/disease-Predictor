@@ -27,7 +27,9 @@ selectorLabel = Label (mainFrame, text="Select the disease to predict", justify=
 selectorLabel.place(relx=0.5, rely=0, anchor=CENTER)
 disease = StringVar()
 disease.set(diseases[0])
+Img = ImageTk.PhotoImage(Image.open("drop-down-arrow.png")) 
 SelectorMenu = OptionMenu(mainFrame, disease, *diseases)
+SelectorMenu.config(indicatoron=0, compound='right', image=Img)
 SelectorMenu.place(relx=0.5, rely=0.1, anchor=CENTER)
 
 
@@ -69,7 +71,7 @@ def collectInfo(disease):
 
 
 proceedButton = Button(mainFrame, text="Enter Information", width=15, height=3, command=lambda: collectInfo(disease.get()))
-proceedButton.place(relx=0.5, rely=0.2, anchor=CENTER)
+proceedButton.place(relx=0.5, rely=0.25, anchor=CENTER)
 
 
 mainWindow.mainloop()
