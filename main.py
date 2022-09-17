@@ -1,11 +1,15 @@
 from tkinter import ttk
 from tkinter import *
-from PIL import Image, ImageTk
-from tkinter import filedialog
+from turtle import right
+from parkinsonsfunc import Parkinsons
+from BreastCancerFunc import BreastCancer
+from DiabetesFunc import Diabetes
+from HeartDiseaseFunc import HeartDisease
 
 
-diseases = ["Covid-19", "Breast Cancer", "Parkinsons", "Diabetes"]
-parameters = [["param 1", "param2"], ["param 1", "param 2", "param 3", "param 4"], ["param 1", "param 2", "param 3"], ["param 1", "param 2", "param 3", "param 4", ]]
+diseases = ["Heart Disease", "Breast Cancer", "Parkinsons", "Diabetes"]
+parameters = [["Age", "Sex", "Chest pain type", "BP", "Cholesterol", "FBS over 120", "EKG results", "Max HR", "Exercise angina" , "ST depression", "Slope of ST", "Number of vessels fluro", "Thallium"], ["param 1", "param 2", "param 3", "param 4"], ["MDVP:Fo(Hz)", "MDVP:Fhi(Hz)", "MDVP:Flo(Hz)", "MDVP:Jitter(%)", "MDVP:Jitter(Abs)", "MDVP:RAP", "MDVP:PPQ", "Jitter:DDP", "MDVP:Shimmer", "MDVP:Shimmer(dB)", "Shimmer:APQ3", "Shimmer:APQ5", "MDVP:APQ", "Shimmer:DDA","NHR", "HNR", "RPDE", "DFA", "spread1", "spread2", "D2", "PPE"], ["Pregnancies", "Glucose", "BloodPressure", "SkinThickness", "Insulin", "BMI", "DiabetesPedigreeFunction", "Age"]]
+
 paramInputEntries = []
 inputParams = []
 paramLabels = []
@@ -27,26 +31,48 @@ selectorLabel = Label (mainFrame, text="Select the disease to predict", justify=
 selectorLabel.place(relx=0.5, rely=0, anchor=CENTER)
 disease = StringVar()
 disease.set(diseases[0])
-Img = ImageTk.PhotoImage(Image.open("drop-down-arrow.png")) 
+Img = PhotoImage(file="drop-down-arrow.png")
 SelectorMenu = OptionMenu(mainFrame, disease, *diseases)
 SelectorMenu.config(indicatoron=0, compound='right', image=Img)
 SelectorMenu.place(relx=0.5, rely=0.1, anchor=CENTER)
 
+def resDisp(pred_arr):
+    global resultFrame
+    if pred_arr[0] in [1,"Presence"]:
+        result = "Positive"
+    else:
+        result = "Negative"
+    return result
 
 def startProc(inputParams):
-    #####input Params is the input data(list)
-    #####add the necessary code here
+    global disease
+    diseaseIndex = diseases.index(disease.get())
+    if diseaseIndex == 0:
+        accuracy, pred_arr = HeartDisease([inputParams])
+    if diseaseIndex == 1:
+        accuracy, pred_arr = BreastCancer([inputParams])
+    if diseaseIndex == 2:
+        accuracy, pred_arr = Parkinsons([inputParams])
+    if diseaseIndex == 3:
+        accuracy, pred_arr = Diabetes([inputParams])
     infoFrame.grid_forget()
     resultFrame.grid(column=0, row=0, sticky=(N, W, E, S))
     resultFrame.columnconfigure(0, weight=1)
     resultFrame.rowconfigure(0, weight=1)
     resultEntry = Label(resultFrame, text="Result", font="Arial 17 bold", justify=CENTER)
-    resultEntry.grid(row=0, column=0, columnspan=4)
+    resultEntry.pack()
+    result = resDisp(pred_arr)
+    result_disp = Label(resultFrame, text = disease.get() + ": " + result, font="Arial 14 bold", justify=CENTER)
+    result_disp.pack()
+    acc = Label(resultFrame, text="Accuracy: " + str(accuracy), font="Arial 14 bold", justify=CENTER)
+    acc.pack()
+
 
 def getParams(inputParams, paramSet):
     for i in range(len(paramSet)):
         inputParams.append(paramInputEntries[i].get())
-    startProc(inputParams)
+    input = [eval(i) for i in inputParams]
+    startProc(input)
 
 def collectInfo(disease):
     global diseases
@@ -57,7 +83,6 @@ def collectInfo(disease):
     infoFrame.columnconfigure(0, weight=1)
     infoFrame.rowconfigure(0, weight=1)
     paramSet = parameters[diseases.index(disease)]
-
     count = 0
     for i in paramSet:
         temp = Label (infoFrame, text="Input " + str(paramSet[count]), justify=CENTER, font='Arial 10 bold')
