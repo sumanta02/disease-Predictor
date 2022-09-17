@@ -1,6 +1,5 @@
 from tkinter import ttk
 from tkinter import *
-from turtle import right
 from parkinsonsfunc import Parkinsons
 from BreastCancerFunc import BreastCancer
 from DiabetesFunc import Diabetes
@@ -23,7 +22,8 @@ mainFrame.grid(column=0, row=0, sticky=(N, W, E, S))
 mainWindow.columnconfigure(0, weight=1)
 mainWindow.rowconfigure(0, weight=1)
 
-infoFrame = ttk.Frame(mainWindow, padding="12 12 12 12")
+infoFrame  = ttk.Frame(mainWindow, padding="12 12 12 12")
+infoCanvas = Canvas(infoFrame)
 
 resultFrame = ttk.Frame(mainWindow, padding="12 12 12 12")
 
@@ -55,8 +55,9 @@ def startProc(inputParams):
         accuracy, pred_arr = Parkinsons([inputParams])
     if diseaseIndex == 3:
         accuracy, pred_arr = Diabetes([inputParams])
-    infoFrame.grid_forget()
-    resultFrame.grid(column=0, row=0, sticky=(N, W, E, S))
+    infoFrame.pack_forget()
+    infoCanvas.pack_forget()
+    resultFrame.pack(fill=BOTH, expand=True)
     resultFrame.columnconfigure(0, weight=1)
     resultFrame.rowconfigure(0, weight=1)
     resultEntry = Label(resultFrame, text="Result", font="Arial 17 bold", justify=CENTER)
@@ -64,7 +65,7 @@ def startProc(inputParams):
     result = resDisp(pred_arr)
     result_disp = Label(resultFrame, text = disease.get() + ": " + result, font="Arial 14 bold", justify=CENTER)
     result_disp.pack()
-    acc = Label(resultFrame, text="Accuracy: " + str(accuracy), font="Arial 14 bold", justify=CENTER)
+    acc = Label(resultFrame, text="Accuracy: " + str(accuracy) + "%", font="Arial 14 bold", justify=CENTER)
     acc.pack()
 
 
@@ -79,19 +80,25 @@ def collectInfo(disease):
     mainFrame.grid_forget()
     mainWindow.title("Input Parameters")
     
-    infoFrame.grid(column=0, row=0, sticky=(N, W, E, S))
-    infoFrame.columnconfigure(0, weight=1)
-    infoFrame.rowconfigure(0, weight=1)
+    scroll = ttk.Scrollbar(infoFrame, orient=VERTICAL, command=infoCanvas.yview)
+    scrollable_frame = ttk.Frame(infoCanvas)
+    scrollable_frame.bind("<Configure>", lambda e: infoCanvas.configure(scrollregion=infoCanvas.bbox("all")))
+    infoCanvas.create_window((0, 0), window=scrollable_frame, anchor=CENTER)
+    infoCanvas.configure(yscrollcommand=scroll.set)
+    infoFrame.pack(fill=BOTH, expand=True)
+    infoCanvas.pack(side=LEFT, fill=BOTH, expand=True)
+    scroll.pack(side=RIGHT, fill=Y)
     paramSet = parameters[diseases.index(disease)]
     count = 0
     for i in paramSet:
-        temp = Label (infoFrame, text="Input " + str(paramSet[count]), justify=CENTER, font='Arial 10 bold')
-        temp.pack(padx=5, pady=10)
-        paramInputEntries.append(Entry(infoFrame, width=30, relief=SUNKEN))
+        temp = Label (scrollable_frame, text="Input " + str(paramSet[count]), justify=CENTER, font='Arial 10 bold')
+        temp.pack(padx=5, pady=10, anchor=N)
+        paramInputEntries.append(Entry(scrollable_frame, width=30, relief=SUNKEN, justify=CENTER))
         paramInputEntries[-1].pack(padx=5, pady=10)
         count += 1
-    submitButton = Button(infoFrame, text="Get Results", command=lambda: getParams(inputParams, paramSet))
+    submitButton = Button(scrollable_frame, text="Get Results", command=lambda: getParams(inputParams, paramSet))
     submitButton.pack()
+    
 
 
 
