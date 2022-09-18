@@ -1,5 +1,6 @@
 from tkinter import ttk
 from tkinter import *
+from customtkinter import *
 from parkinsonsfunc import Parkinsons
 from BreastCancerFunc import BreastCancer
 from DiabetesFunc import Diabetes
@@ -13,28 +14,33 @@ paramInputEntries = []
 inputParams = []
 paramLabels = []
 
-mainWindow = Tk()
+
+set_default_color_theme("blue")
+set_appearance_mode("dark")
+mainWindow = CTk()
 mainWindow.title("Disease Predictor")
 mainWindow.geometry("600x600")
 
-mainFrame = ttk.Frame(mainWindow, padding = "12 12 12 12")
+
+
+mainFrame = CTkFrame(mainWindow)
 mainFrame.grid(column=0, row=0, sticky=(N, W, E, S))
 mainWindow.columnconfigure(0, weight=1)
 mainWindow.rowconfigure(0, weight=1)
 
-infoFrame  = ttk.Frame(mainWindow, padding="12 12 12 12")
-infoCanvas = Canvas(infoFrame)
+infoFrame  = CTkFrame(mainWindow, fg_color="#2a2d2e")
+infoCanvas = CTkCanvas(infoFrame)
 
-resultFrame = ttk.Frame(mainWindow, padding="12 12 12 12")
+resultFrame = CTkFrame(mainWindow, fg_color="#2a2d2e")
 
-selectorLabel = Label (mainFrame, text="Select the disease to predict", justify=CENTER, font='Arial 14 bold')
-selectorLabel.place(relx=0.5, rely=0, anchor=CENTER)
+selectorLabel = CTkLabel (master=mainFrame, text="Select the disease to predict", justify=CENTER, text_font=("Arial", 14))
+selectorLabel.pack(anchor=CENTER)
 disease = StringVar()
 disease.set(diseases[0])
-Img = PhotoImage(file="drop-down-arrow.png")
-SelectorMenu = OptionMenu(mainFrame, disease, *diseases)
-SelectorMenu.config(indicatoron=0, compound='right', image=Img)
-SelectorMenu.place(relx=0.5, rely=0.1, anchor=CENTER)
+SelectorMenu = CTkOptionMenu(master=mainFrame, variable=disease, values=diseases, corner_radius=5)
+
+SelectorMenu.pack(anchor=CENTER, padx=20, pady=10)
+
 
 def resDisp(pred_arr):
     global resultFrame
@@ -60,12 +66,12 @@ def startProc(inputParams):
     resultFrame.pack(fill=BOTH, expand=True)
     resultFrame.columnconfigure(0, weight=1)
     resultFrame.rowconfigure(0, weight=1)
-    resultEntry = Label(resultFrame, text="Result", font="Arial 17 bold", justify=CENTER)
+    resultEntry = CTkLabel(resultFrame, text="Result", text_font=("Arial", 17), justify=CENTER)
     resultEntry.pack()
     result = resDisp(pred_arr)
-    result_disp = Label(resultFrame, text = disease.get() + ": " + result, font="Arial 14 bold", justify=CENTER)
+    result_disp = CTkLabel(resultFrame, text = disease.get() + ": " + result, text_font=("Arial", 14), justify=CENTER)
     result_disp.pack()
-    acc = Label(resultFrame, text="Accuracy: " + str(accuracy) + "%", font="Arial 14 bold", justify=CENTER)
+    acc = CTkLabel(resultFrame, text="Accuracy: " + str(accuracy) + "%", text_font=("Arial", 14), justify=CENTER)
     acc.pack()
 
 
@@ -80,30 +86,31 @@ def collectInfo(disease):
     mainFrame.grid_forget()
     mainWindow.title("Input Parameters")
     
-    scroll = ttk.Scrollbar(infoFrame, orient=VERTICAL, command=infoCanvas.yview)
-    scrollable_frame = ttk.Frame(infoCanvas)
+    scroll = CTkScrollbar(infoFrame, orientation=VERTICAL, command=infoCanvas.yview)
+    scrollable_frame = CTkFrame(infoCanvas, fg_color="#2a2d2e", bg_color="#2a2d2e")
     scrollable_frame.bind("<Configure>", lambda e: infoCanvas.configure(scrollregion=infoCanvas.bbox("all")))
     infoCanvas.create_window((0, 0), window=scrollable_frame, anchor=CENTER)
     infoCanvas.configure(yscrollcommand=scroll.set)
+    infoCanvas.configure(bg="#2a2d2e")
     infoFrame.pack(fill=BOTH, expand=True)
     infoCanvas.pack(side=LEFT, fill=BOTH, expand=True)
     scroll.pack(side=RIGHT, fill=Y)
     paramSet = parameters[diseases.index(disease)]
     count = 0
     for i in paramSet:
-        temp = Label (scrollable_frame, text="Input " + str(paramSet[count]), justify=CENTER, font='Arial 10 bold')
+        temp = CTkLabel (scrollable_frame, text="Input " + str(paramSet[count]), justify=CENTER, text_font=("Arial", 10), bg_color="#2a2d2e")
         temp.pack(padx=5, pady=10, anchor=N)
-        paramInputEntries.append(Entry(scrollable_frame, width=30, relief=SUNKEN, justify=CENTER))
+        paramInputEntries.append(CTkEntry(scrollable_frame, justify=CENTER, bg_color="#2a2d2e", width=120, height=25))
         paramInputEntries[-1].pack(padx=5, pady=10)
         count += 1
-    submitButton = Button(scrollable_frame, text="Get Results", command=lambda: getParams(inputParams, paramSet))
-    submitButton.pack()
+    submitButton = CTkButton(scrollable_frame, text="Get Results", command=lambda: getParams(inputParams, paramSet), corner_radius=5)
+    submitButton.pack(anchor=CENTER, padx=20, pady=10)
     
 
 
 
-proceedButton = Button(mainFrame, text="Enter Information", width=15, height=3, command=lambda: collectInfo(disease.get()))
-proceedButton.place(relx=0.5, rely=0.25, anchor=CENTER)
+proceedButton = CTkButton(mainFrame, text="Enter Information", width=15, height=3, command=lambda: collectInfo(disease.get()), corner_radius=5)
+proceedButton.pack(anchor=CENTER)
 
 
 mainWindow.mainloop()

@@ -100,7 +100,7 @@ def collectInfo(disease):
     for i in paramSet:
         temp = CTkLabel (scrollable_frame, text="Input " + str(paramSet[count]), justify=CENTER, text_font=("Arial", 10), bg_color="#2a2d2e")
         temp.pack(padx=5, pady=10, anchor=N)
-        paramInputEntries.append(CTkEntry(scrollable_frame, relief=SUNKEN, justify=CENTER, bg_color="#2a2d2e", width=120, height=25))
+        paramInputEntries.append(CTkEntry(scrollable_frame, justify=CENTER, bg_color="#2a2d2e", width=120, height=25))
         paramInputEntries[-1].pack(padx=5, pady=10)
         count += 1
     submitButton = CTkButton(scrollable_frame, text="Get Results", command=lambda: getParams(inputParams, paramSet), corner_radius=5)
