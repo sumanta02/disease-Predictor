@@ -22,6 +22,6 @@ def Diabetes(TestList):
 
     model=KNeighborsClassifier(n_neighbors=3).fit(y_train,x_train)
     predictor=model.predict(TestList)
-    pred=[labels[p] for p in predictor]
+    pred=[p for p in predictor]
     acc=model.score(y_train,x_train)
     return acc*100, pred
