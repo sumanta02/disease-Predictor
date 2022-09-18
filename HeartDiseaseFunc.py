@@ -39,6 +39,5 @@ def HeartDisease(Testlist):
     model=LogisticRegression().fit(x_train,y_train)
     pred=model.predict(Testlist)
     pr=[hddf['Heart Disease'][i] for i in pred]
-    res = pr[0]
     acc=model.score(x_test,y_test)
-    return acc*100, res
+    return acc*100, pr
