@@ -48,13 +48,13 @@ def startProc(inputParams):
     global disease
     diseaseIndex = diseases.index(disease.get())
     if diseaseIndex == 0:
-        accuracy, pred_arr = HeartDisease([inputParams])
+        accuracy, pred_arr = HeartDisease([[float(x) for x in inputParams]])
     if diseaseIndex == 1:
-        accuracy, pred_arr = BreastCancer([inputParams])
+        accuracy, pred_arr = BreastCancer([[float(x) for x in inputParams]])
     if diseaseIndex == 2:
-        accuracy, pred_arr = Parkinsons([inputParams])
+        accuracy, pred_arr = Parkinsons([[float(x) for x in inputParams]])
     if diseaseIndex == 3:
-        accuracy, pred_arr = Diabetes([inputParams])
+        accuracy, pred_arr = Diabetes([[float(x) for x in inputParams]])
     infoFrame.pack_forget()
     infoCanvas.pack_forget()
     resultFrame.pack(fill=BOTH, expand=True)
