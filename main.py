@@ -57,8 +57,10 @@ def reset(resultEntry, result_disp, acc, resetButton):
 
 def resDisp(pred_arr):
     global resultFrame
-    if pred_arr[0] in [1,"Presence", "malignant"]:
+    if pred_arr[0] in [1,"Presence"]:
         result = "Positive"
+    elif pred_arr[0] in ["malignant","benign"]:
+        result=pred_arr[0]
     else:
         result = "Negative"
     return result
