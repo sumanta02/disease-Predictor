@@ -10,6 +10,11 @@ def BreastCancer(TestList):
     from sklearn.svm import SVC
     bc=load_breast_cancer()
     bcdf=pd.DataFrame(bc.data,columns=bc.feature_names)
+    BC_medians= [0.3242, 1.108, 2.287, 24.53, 0.00638, 0.02045, 0.02589, 0.01093, 0.01873, 0.003187, 14.97, 25.41, 97.66, 686.5, 0.1313, 0.2119]
+    testList=TestList[0]
+    for i in range(len(BC_medians)):
+        testList.insert(i + 10, BC_medians[i])
+    TestList = [testList]
     
     #Label Encoding
     labels=np.asarray(bc.target)

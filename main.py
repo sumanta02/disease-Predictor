@@ -8,7 +8,10 @@ from HeartDiseaseFunc import HeartDisease
 
 
 diseases = ["Heart Disease", "Breast Cancer", "Parkinsons", "Diabetes"]
-parameters = [["Age", "Sex", "Chest pain type", "BP", "Cholesterol", "FBS over 120", "EKG results", "Max HR", "Exercise angina" , "ST depression", "Slope of ST", "Number of vessels fluro", "Thallium"], ["param 1", "param 2", "param 3", "param 4"], ["MDVP:Fo(Hz)", "MDVP:Fhi(Hz)", "MDVP:Flo(Hz)", "MDVP:Jitter(%)", "MDVP:Jitter(Abs)", "MDVP:RAP", "MDVP:PPQ", "Jitter:DDP", "MDVP:Shimmer", "MDVP:Shimmer(dB)", "Shimmer:APQ3", "Shimmer:APQ5", "MDVP:APQ", "Shimmer:DDA","NHR", "HNR", "RPDE", "DFA", "spread1", "spread2", "D2", "PPE"], ["Pregnancies", "Glucose", "BloodPressure", "SkinThickness", "Insulin", "BMI", "DiabetesPedigreeFunction", "Age"]]
+parameters = [["Age", "Sex", "Chest pain type", "BP", "Cholesterol", "FBS over 120", "EKG results", "Max HR", "Exercise angina" , "ST depression", "Slope of ST", "Number of vessels fluro", "Thallium"], ["mean radius", "mean texture", "mean perimeter", "mean area",
+       "mean smoothness", "mean compactness", "mean concavity",
+       "mean concave points", "mean symmetry", "mean fractal dimension", "worst concavity",
+       "worst concave points", "worst symmetry", "worst fractal dimension"], ["MDVP:Fo(Hz)", "MDVP:Fhi(Hz)", "MDVP:Flo(Hz)", "MDVP:Jitter(%)", "MDVP:Jitter(Abs)", "MDVP:RAP", "MDVP:PPQ", "Jitter:DDP", "MDVP:Shimmer", "MDVP:Shimmer(dB)", "Shimmer:APQ3", "Shimmer:APQ5", "MDVP:APQ", "Shimmer:DDA","NHR", "HNR", "RPDE", "DFA", "spread1", "spread2", "D2", "PPE"], ["Pregnancies", "Glucose", "BloodPressure", "SkinThickness", "Insulin", "BMI", "DiabetesPedigreeFunction", "Age"]]
 
 paramInputEntries = []
 inputParams = []
@@ -23,7 +26,7 @@ mainWindow.geometry("600x600")
 
 
 
-mainFrame = CTkFrame(mainWindow)
+mainFrame = CTkFrame(mainWindow, border_color="#2a2d2e")
 mainFrame.grid(column=0, row=0, sticky=(N, W, E, S))
 mainWindow.columnconfigure(0, weight=1)
 mainWindow.rowconfigure(0, weight=1)
@@ -31,7 +34,7 @@ mainWindow.rowconfigure(0, weight=1)
 infoFrame  = CTkFrame(mainWindow, fg_color="#2a2d2e")
 infoCanvas = CTkCanvas(infoFrame)
 
-resultFrame = CTkFrame(mainWindow, fg_color="#2a2d2e")
+resultFrame = CTkFrame(mainWindow, fg_color="#2a2d2e", border_color="#2a2d2e")
 
 selectorLabel = CTkLabel (master=mainFrame, text="Select the disease to predict", justify=CENTER, text_font=("Arial", 14))
 selectorLabel.pack(anchor=CENTER)
@@ -87,12 +90,16 @@ def startProc(inputParams):
     resetButton.pack()
 
 
-def getParams(inputParams, paramSet, scrollable_frame, scroll):
+def getParams(inputParams, paramSet, submitButton, scroll, scrollable_frame, infoCanvas, infoFrame):
     for i in range(len(paramSet)):
         inputParams.append(paramInputEntries[i].get())
+        paramInputEntries[i].pack_forget()
     input = [eval(i) for i in inputParams]
-    scrollable_frame.pack_forget()
     scroll.pack_forget()
+    infoCanvas.pack_forget()
+    submitButton.pack_forget()
+    infoFrame.pack_forget()
+    scrollable_frame.pack_forget()
     startProc(input)
 
 def collectInfo(disease):
@@ -101,13 +108,16 @@ def collectInfo(disease):
     mainWindow.title("Input Parameters")
     
     scroll = CTkScrollbar(infoFrame, orientation=VERTICAL, command=infoCanvas.yview)
-    scrollable_frame = CTkFrame(infoCanvas, fg_color="#2a2d2e", bg_color="#2a2d2e")
+    scrollable_frame = CTkFrame(infoCanvas, fg_color="#2a2d2e", bg_color="#2a2d2e", border_color="#2a2d2e")
     scrollable_frame.bind("<Configure>", lambda e: infoCanvas.configure(scrollregion=infoCanvas.bbox("all")))
     infoCanvas.create_window((0, 0), window=scrollable_frame, anchor=CENTER)
     infoCanvas.configure(yscrollcommand=scroll.set)
     infoCanvas.configure(bg="#2a2d2e")
+    
     infoFrame.pack(fill=BOTH, expand=True)
+    
     infoCanvas.pack(side=LEFT, fill=BOTH, expand=True)
+    scroll.pack_forget()
     scroll.pack(side=RIGHT, fill=Y)
     paramSet = parameters[diseases.index(disease)]
     count = 0
@@ -117,7 +127,7 @@ def collectInfo(disease):
         paramInputEntries.append(CTkEntry(scrollable_frame, justify=CENTER, bg_color="#2a2d2e", width=120, height=25))
         paramInputEntries[-1].pack(padx=5, pady=10)
         count += 1
-    submitButton = CTkButton(scrollable_frame, text="Get Results", command=lambda: getParams(inputParams, paramSet, scrollable_frame, scroll), corner_radius=5)
+    submitButton = CTkButton(scrollable_frame, text="Get Results", command=lambda: getParams(inputParams, paramSet, submitButton, scroll, scrollable_frame, infoCanvas, infoFrame), corner_radius=5)
     submitButton.pack(anchor=CENTER, padx=20, pady=10)
     
 
