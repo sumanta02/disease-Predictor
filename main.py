@@ -42,6 +42,16 @@ SelectorMenu = CTkOptionMenu(master=mainFrame, variable=disease, values=diseases
 SelectorMenu.pack(anchor=CENTER, padx=20, pady=10)
 
 
+def reset(resultEntry, result_disp, acc, resetButton):
+    resultFrame.pack_forget()
+    infoFrame.pack_forget()
+    infoCanvas.pack_forget()
+    result_disp.pack_forget()
+    acc.pack_forget()
+    resetButton.pack_forget()
+    resultEntry.pack_forget()
+    mainFrame.grid(column=0, row=0, sticky=(N, W, E, S))
+
 def resDisp(pred_arr):
     global resultFrame
     if pred_arr[0] in [1,"Presence"]:
@@ -72,13 +82,17 @@ def startProc(inputParams):
     result_disp = CTkLabel(resultFrame, text = disease.get() + ": " + result, text_font=("Arial", 14), justify=CENTER)
     result_disp.pack()
     acc = CTkLabel(resultFrame, text="Accuracy: " + str(accuracy) + "%", text_font=("Arial", 14), justify=CENTER)
+    resetButton = CTkButton(resultFrame, text="Return to main window", text_font=("Arial", 14), command=lambda: reset(resultEntry,result_disp, acc, resetButton))
     acc.pack()
+    resetButton.pack()
 
 
-def getParams(inputParams, paramSet):
+def getParams(inputParams, paramSet, scrollable_frame, scroll):
     for i in range(len(paramSet)):
         inputParams.append(paramInputEntries[i].get())
     input = [eval(i) for i in inputParams]
+    scrollable_frame.pack_forget()
+    scroll.pack_forget()
     startProc(input)
 
 def collectInfo(disease):
@@ -103,13 +117,13 @@ def collectInfo(disease):
         paramInputEntries.append(CTkEntry(scrollable_frame, justify=CENTER, bg_color="#2a2d2e", width=120, height=25))
         paramInputEntries[-1].pack(padx=5, pady=10)
         count += 1
-    submitButton = CTkButton(scrollable_frame, text="Get Results", command=lambda: getParams(inputParams, paramSet), corner_radius=5)
+    submitButton = CTkButton(scrollable_frame, text="Get Results", command=lambda: getParams(inputParams, paramSet, scrollable_frame, scroll), corner_radius=5)
     submitButton.pack(anchor=CENTER, padx=20, pady=10)
     
 
 
 
-proceedButton = CTkButton(mainFrame, text="Enter Information", width=15, height=3, command=lambda: collectInfo(disease.get()), corner_radius=5)
+proceedButton = CTkButton(mainFrame, text="Enter Information", width=15, height=3, command=lambda: [inputParams.clear(), collectInfo(disease.get())], corner_radius=5)
 proceedButton.pack(anchor=CENTER)
 
 
