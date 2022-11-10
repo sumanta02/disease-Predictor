@@ -41,5 +41,4 @@ def Parkinsons(TestList):
     model_GB = GradientBoostingClassifier()
     model_GB.fit(x_train, y_train)
     y_predict_gb = model_GB.predict(TestList)
-    pred=[labels[p] for p in y_predict_gb]
-    return model_GB.score(x_test, y_test)*100, pred
+    return model_GB.score(x_test, y_test)*100, y_predict_gb
