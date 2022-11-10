@@ -8,10 +8,10 @@ from HeartDiseaseFunc import HeartDisease
 
 
 diseases = ["Heart Disease", "Breast Cancer", "Parkinsons", "Diabetes"]
-parameters = [["Age", "Sex", "Chest pain type", "BP", "Cholesterol", "FBS over 120", "EKG results", "Max HR", "Exercise angina" , "ST depression", "Slope of ST", "Number of vessels fluro", "Thallium"], ["mean radius", "mean texture", "mean perimeter", "mean area",
+parameters = [["Age", "Sex(1-Male / 0-Female)", "Chest pain type", "BP", "Cholesterol", "FBS over 120", "EKG results", "Max HR", "Exercise angina" , "ST depression", "Slope of ST", "Number of vessels fluro", "Thallium"], ["mean radius", "mean texture", "mean perimeter", "mean area",
        "mean smoothness", "mean compactness", "mean concavity",
        "mean concave points", "mean symmetry", "mean fractal dimension", "worst concavity",
-       "worst concave points", "worst symmetry", "worst fractal dimension"], ["MDVP:Fo(Hz)", "MDVP:Fhi(Hz)", "MDVP:Flo(Hz)", "MDVP:Jitter(%)", "MDVP:Jitter(Abs)", "MDVP:RAP", "MDVP:PPQ", "Jitter:DDP", "MDVP:Shimmer", "MDVP:Shimmer(dB)", "Shimmer:APQ3", "Shimmer:APQ5", "MDVP:APQ", "Shimmer:DDA","NHR", "HNR", "RPDE", "DFA", "spread1", "spread2", "D2", "PPE"], ["Pregnancies", "Glucose", "BloodPressure", "SkinThickness", "Insulin", "BMI", "DiabetesPedigreeFunction", "Age"]]
+       "worst concave points", "worst symmetry", "worst fractal dimension"], ["MDVP:Fo(Hz)", "MDVP:Fhi(Hz)", "MDVP:Flo(Hz)", "MDVP:Jitter(%)", "MDVP:Jitter(Abs)", "MDVP:RAP", "MDVP:PPQ", "Jitter:DDP", "MDVP:Shimmer", "MDVP:Shimmer(dB)", "Shimmer:APQ3", "Shimmer:APQ5", "MDVP:APQ", "Shimmer:DDA","NHR", "HNR", "RPDE", "DFA", "spread1", "spread2", "D2", "PPE"], ["Pregnancy Month", "Glucose", "BloodPressure", "SkinThickness", "Insulin", "BMI", "DiabetesPedigreeFunction", "Age"]]
 
 paramInputEntries = []
 inputParams = []
@@ -61,7 +61,7 @@ def resDisp(pred_arr):
         result = "Positive"
     elif pred_arr[0] in ["malignant","benign"]:
         result=pred_arr[0]
-    else:
+    elif pred_arr[0] in [0,"Absence"]:
         result = "Negative"
     return result
 
