@@ -21,8 +21,8 @@ The following Supervised Machine Learning Models are incorporated :-
 4.	Logistic Regression
 
 <h3><u>Contribution</u></h3><ol>
-<li>	Arin Ghose – Design and Tester</li>
+<li>	Arin Ghose – Design and Machine Learning Code Implementation</li>
 <li>	Samaresh Maiti – Machine Learning Code Implementation</li>
 <li>	Sohom Sen - Machine Learning Code Implementation</li>
-<li>	Subhodeep Ghosh – Design Implementation</li>
+<li>	Subhodeep Ghosh – Design and Testing</li>
 <li>	Sumanta Manna - Encapsulating frontend and backend</li></ol></p>
